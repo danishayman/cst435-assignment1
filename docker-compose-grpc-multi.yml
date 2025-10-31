@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  grpc-server-1:
+    build:
+      context: .
+      dockerfile: Dockerfile.grpc
+    ports:
+      - "50051:50051"
+    container_name: grpc-worker-1
+
+  grpc-server-2:
+    build:
+      context: .
+      dockerfile: Dockerfile.grpc
+    ports:
+      - "50052:50051"
+    container_name: grpc-worker-2
+
+  grpc-server-3:
+    build:
+      context: .
+      dockerfile: Dockerfile.grpc
+    ports:
+      - "50053:50051"
+    container_name: grpc-worker-3

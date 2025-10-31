@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package matrix;
+
+service MatrixMultiplication {
+  rpc Multiply (MatrixRequest) returns (MatrixResponse);
+}
+
+message MatrixRequest {
+  repeated MatrixRow matrix_a = 1;
+  repeated MatrixRow matrix_b = 2;
+}
+
+message MatrixRow {
+  repeated double values = 1;
+}
+
+message MatrixResponse {
+  repeated MatrixRow result = 1;
+  double computation_time = 2;
+}

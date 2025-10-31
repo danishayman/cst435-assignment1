@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  http-server-1:
+    build:
+      context: .
+      dockerfile: Dockerfile.http
+    ports:
+      - "5001:5000"
+    container_name: http-worker-1
+
+  http-server-2:
+    build:
+      context: .
+      dockerfile: Dockerfile.http
+    ports:
+      - "5002:5000"
+    container_name: http-worker-2
+
+  http-server-3:
+    build:
+      context: .
+      dockerfile: Dockerfile.http
+    ports:
+      - "5003:5000"
+    container_name: http-worker-3
