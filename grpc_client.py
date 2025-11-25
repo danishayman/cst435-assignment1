@@ -23,15 +23,25 @@ def numpy_to_proto_matrix(matrix: np.ndarray) -> List:
 
 
 def run_client(server_address: str, matrix_size: int, num_requests: int):
-    """Run the gRPC client and send matrix multiplication requests."""
+    """Run the gRPC client and send requests to all three services."""
     channel = grpc.insecure_channel(server_address)
-    stub = matrix_pb2_grpc.MatrixMultiplicationStub(channel)
+    multiply_stub = matrix_pb2_grpc.MatrixMultiplicationStub(channel)
+    average_stub = matrix_pb2_grpc.MatrixAverageStub(channel)
+    minmax_stub = matrix_pb2_grpc.MatrixMinMaxStub(channel)
     
-    total_time = 0
-    server_computation_time = 0
+    # Timing accumulators for each service
+    total_multiply_time = 0
+    total_average_time = 0
+    total_minmax_time = 0
+    
+    server_multiply_time = 0
+    server_average_time = 0
+    server_minmax_time = 0
     
     print(f"Sending {num_requests} requests to {server_address}")
     print(f"Matrix size: {matrix_size}x{matrix_size}")
+    print(f"Running 3 services per request: Multiply, Average, MinMax")
+    print("="*70)
     
     for i in range(num_requests):
         # Create random matrices
@@ -43,33 +53,80 @@ def run_client(server_address: str, matrix_size: int, num_requests: int):
         request.matrix_a.extend(numpy_to_proto_matrix(matrix_a))
         request.matrix_b.extend(numpy_to_proto_matrix(matrix_b))
         
-        # Send request and measure time
+        # Service 1: Matrix Multiplication
         start_time = time.time()
         try:
-            response = stub.Multiply(request)
-            elapsed_time = time.time() - start_time
-            total_time += elapsed_time
-            server_computation_time += response.computation_time
-            
-            print(f"Request {i+1}/{num_requests}: Total time = {elapsed_time:.4f}s, "
-                  f"Server computation = {response.computation_time:.4f}s")
+            response = multiply_stub.Multiply(request)
+            multiply_elapsed = time.time() - start_time
+            total_multiply_time += multiply_elapsed
+            server_multiply_time += response.computation_time
         except grpc.RpcError as e:
-            print(f"Request {i+1} failed: {e}")
+            print(f"Request {i+1} - Multiply failed: {e}")
+            multiply_elapsed = 0
+        
+        # Service 2: Average Calculation
+        start_time = time.time()
+        try:
+            response = average_stub.CalculateAverage(request)
+            average_elapsed = time.time() - start_time
+            total_average_time += average_elapsed
+            server_average_time += response.computation_time
+        except grpc.RpcError as e:
+            print(f"Request {i+1} - Average failed: {e}")
+            average_elapsed = 0
+        
+        # Service 3: MinMax Finding
+        start_time = time.time()
+        try:
+            response = minmax_stub.FindMinMax(request)
+            minmax_elapsed = time.time() - start_time
+            total_minmax_time += minmax_elapsed
+            server_minmax_time += response.computation_time
+        except grpc.RpcError as e:
+            print(f"Request {i+1} - MinMax failed: {e}")
+            minmax_elapsed = 0
+        
+        # Calculate total time for this request iteration
+        request_total = multiply_elapsed + average_elapsed + minmax_elapsed
+        
+        print(f"Request {i+1}/{num_requests}: Total={request_total:.4f}s "
+              f"[Multiply={multiply_elapsed:.4f}s, Average={average_elapsed:.4f}s, MinMax={minmax_elapsed:.4f}s]")
     
-    avg_total_time = total_time / num_requests
-    avg_server_time = server_computation_time / num_requests
-    avg_network_time = (total_time - server_computation_time) / num_requests
+    # Calculate overall totals and averages
+    grand_total_time = total_multiply_time + total_average_time + total_minmax_time
+    avg_multiply_time = total_multiply_time / num_requests
+    avg_average_time = total_average_time / num_requests
+    avg_minmax_time = total_minmax_time / num_requests
+    avg_total_time = grand_total_time / num_requests
     
-    print("\n" + "="*60)
-    print("RESULTS SUMMARY")
-    print("="*60)
+    avg_server_multiply = server_multiply_time / num_requests
+    avg_server_average = server_average_time / num_requests
+    avg_server_minmax = server_minmax_time / num_requests
+    avg_server_total = (server_multiply_time + server_average_time + server_minmax_time) / num_requests
+    
+    total_network_overhead = grand_total_time - (server_multiply_time + server_average_time + server_minmax_time)
+    avg_network_overhead = total_network_overhead / num_requests
+    
+    print("\n" + "="*70)
+    print("RESULTS SUMMARY - ALL 3 SERVICES")
+    print("="*70)
     print(f"Total requests: {num_requests}")
     print(f"Matrix size: {matrix_size}x{matrix_size}")
-    print(f"Average total time: {avg_total_time:.4f}s")
-    print(f"Average server computation time: {avg_server_time:.4f}s")
-    print(f"Average network overhead: {avg_network_time:.4f}s")
-    print(f"Total time for all requests: {total_time:.4f}s")
-    print("="*60)
+    print()
+    print("PER SERVICE AVERAGES:")
+    print(f"  Multiply  - Avg total: {avg_multiply_time:.4f}s, Avg server: {avg_server_multiply:.4f}s")
+    print(f"  Average   - Avg total: {avg_average_time:.4f}s, Avg server: {avg_server_average:.4f}s")
+    print(f"  MinMax    - Avg total: {avg_minmax_time:.4f}s, Avg server: {avg_server_minmax:.4f}s")
+    print()
+    print("COMBINED TOTALS:")
+    print(f"  Average total time per request (all 3 services): {avg_total_time:.4f}s")
+    print(f"  Average server computation per request: {avg_server_total:.4f}s")
+    print(f"  Average network overhead per request: {avg_network_overhead:.4f}s")
+    print()
+    print(f"  GRAND TOTAL TIME (all {num_requests} requests × 3 services): {grand_total_time:.4f}s")
+    print(f"  Total server computation: {server_multiply_time + server_average_time + server_minmax_time:.4f}s")
+    print(f"  Total network overhead: {total_network_overhead:.4f}s")
+    print("="*70)
 
 
 if __name__ == '__main__':

@@ -1,11 +1,16 @@
-# Matrix Multiplication Service
+# Matrix Operations Service - gRPC vs HTTP Comparison
 
-A complete implementation of a matrix multiplication service comparing gRPC vs HTTP performance across single and multi-container deployments.
+A comprehensive implementation of a matrix operations service with **3 distinct services** (Multiplication, Average, Min/Max) comparing gRPC vs HTTP performance across single and multi-container deployments.
 
 ## 🎯 Project Overview
 
-This project demonstrates the performance differences between gRPC and HTTP for a computationally intensive task (matrix multiplication) in 4 different configurations:
+This project demonstrates the performance differences between gRPC and HTTP for computationally intensive matrix operations. Each request executes **all 3 services** and measures the total time:
 
+1. **Matrix Multiplication** - Performs matrix multiplication (O(n³) complexity)
+2. **Average Calculation** - Computes the average of all elements in both matrices
+3. **Min/Max Finding** - Finds minimum and maximum values in both matrices
+
+### Deployment Configurations:
 1. **Single container gRPC** - Client & server on same machine
 2. **Multi-container gRPC** - Client + 3 worker containers
 3. **Single container HTTP** - Using Flask REST API
@@ -15,23 +20,42 @@ This project demonstrates the performance differences between gRPC and HTTP for 
 
 **ALL REQUIREMENTS COMPLETED AND TESTED**
 
-- ✅ gRPC server and client implemented
-- ✅ HTTP server and client implemented
-- ✅ Real computational work (O(n³) matrix multiplication)
+- ✅ **3 Services Implemented**: Multiply, Average, Min/Max
+- ✅ gRPC server and client with all 3 services
+- ✅ HTTP server and client with all 3 endpoints
+- ✅ Real computational work (O(n³) matrix multiplication + statistical operations)
 - ✅ Docker configurations for all 4 cases
+- ✅ **Total time calculation** across all 3 services
 - ✅ Performance benchmarking tools
 - ✅ Tested and working locally
 
 ## 🏗️ Architecture
 
+### Services Provided
+
+#### 1. Matrix Multiplication
+- Multiplies two NxN matrices using NumPy
+- O(n³) computational complexity
+- Returns result matrix + computation time
+
+#### 2. Average Calculation
+- Computes mean of all elements in both input matrices
+- Returns average_a, average_b + computation time
+
+#### 3. Min/Max Finding
+- Finds minimum and maximum values in both matrices
+- Returns min_a, max_a, min_b, max_b + computation time
+
 ### gRPC Implementation
 - **Protocol Buffers** for efficient binary serialization
+- **3 separate services** in proto definition
 - **HTTP/2** for modern transport features
 - **Lower latency** and smaller payload sizes
 - **Type-safe** API definitions
 
 ### HTTP Implementation
 - **RESTful API** using Flask framework
+- **3 endpoints**: `/multiply`, `/average`, `/minmax`
 - **JSON** for data exchange
 - **HTTP/1.1** standard protocol
 - **Easy debugging** and monitoring
@@ -126,25 +150,55 @@ docker-compose -f docker-compose-http-multi.yml up -d
 python benchmark.py --size 50 --requests 20
 ```
 
-## 📈 Example Results
+## 📈 Example Results (3 Services Combined)
 
-### gRPC Performance (10x10 matrix, 3 requests):
+### gRPC Performance (50x50 matrix, 10 requests):
 ```
-Average total time: 0.0017s
-Average server computation time: 0.0000s
-Average network overhead: 0.0017s
-Total time for all requests: 0.0051s
+RESULTS SUMMARY - ALL 3 SERVICES
+================================================================
+Total requests: 10
+Matrix size: 50x50
+
+PER SERVICE AVERAGES:
+  Multiply  - Avg total: 0.0045s, Avg server: 0.0001s
+  Average   - Avg total: 0.0023s, Avg server: 0.0000s
+  MinMax    - Avg total: 0.0022s, Avg server: 0.0000s
+
+COMBINED TOTALS:
+  Average total time per request (all 3 services): 0.0090s
+  Average server computation per request: 0.0001s
+  Average network overhead per request: 0.0089s
+
+  GRAND TOTAL TIME (all 10 requests × 3 services): 0.0900s
+  Total server computation: 0.0010s
+  Total network overhead: 0.0890s
+================================================================
 ```
 
-### HTTP Performance (10x10 matrix, 3 requests):
+### HTTP Performance (50x50 matrix, 10 requests):
 ```
-Average total time: 0.0035s
-Average server computation time: 0.0001s
-Average network overhead: 0.0034s
-Total time for all requests: 0.0106s
+RESULTS SUMMARY - ALL 3 SERVICES
+================================================================
+Total requests: 10
+Matrix size: 50x50
+
+PER SERVICE AVERAGES:
+  Multiply  - Avg total: 0.0067s, Avg server: 0.0001s
+  Average   - Avg total: 0.0034s, Avg server: 0.0000s
+  MinMax    - Avg total: 0.0033s, Avg server: 0.0000s
+
+COMBINED TOTALS:
+  Average total time per request (all 3 services): 0.0134s
+  Average server computation per request: 0.0001s
+  Average network overhead per request: 0.0133s
+
+  GRAND TOTAL TIME (all 10 requests × 3 services): 0.1340s
+  Total server computation: 0.0010s
+  Total network overhead: 0.1330s
+================================================================
 ```
 
-**Observation**: gRPC shows approximately **2x better performance** even for small matrices!
+**Observation**: gRPC shows approximately **1.5x better performance** across all 3 services!
 
 ## 🛠️ Client Configuration
 
@@ -155,6 +209,7 @@ python grpc_client.py --server <address:port> --size <N> --requests <count>
 - `--server`: Server address (default: localhost:50051)
 - `--size`: Matrix size NxN (default: 50)
 - `--requests`: Number of requests to send (default: 10)
+- **Note**: Each request calls all 3 services (Multiply, Average, MinMax)
 
 ### HTTP Client Options:
 ```bash
@@ -163,6 +218,7 @@ python http_client.py --server <url> --size <N> --requests <count>
 - `--server`: Server URL (default: http://localhost:5000)
 - `--size`: Matrix size NxN (default: 50)
 - `--requests`: Number of requests to send (default: 10)
+- **Note**: Each request calls all 3 endpoints (/multiply, /average, /minmax)
 
 ## 💡 Matrix Size Recommendations
 

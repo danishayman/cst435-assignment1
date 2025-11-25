@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  http-multiply:
+    build:
+      context: .
+      dockerfile: Dockerfile.http_multiply
+    ports:
+      - "5001:5001"
+    container_name: http-multiply-service
+    networks:
+      - matrix-network
+
+  http-average:
+    build:
+      context: .
+      dockerfile: Dockerfile.http_average
+    ports:
+      - "5002:5002"
+    container_name: http-average-service
+    networks:
+      - matrix-network
+
+  http-minmax:
+    build:
+      context: .
+      dockerfile: Dockerfile.http_minmax
+    ports:
+      - "5003:5003"
+    container_name: http-minmax-service
+    networks:
+      - matrix-network
+
+networks:
+  matrix-network:
+    driver: bridge

@@ -6,6 +6,14 @@ service MatrixMultiplication {
   rpc Multiply (MatrixRequest) returns (MatrixResponse);
 }
 
+service MatrixAverage {
+  rpc CalculateAverage (MatrixRequest) returns (AverageResponse);
+}
+
+service MatrixMinMax {
+  rpc FindMinMax (MatrixRequest) returns (MinMaxResponse);
+}
+
 message MatrixRequest {
   repeated MatrixRow matrix_a = 1;
   repeated MatrixRow matrix_b = 2;
@@ -18,4 +26,18 @@ message MatrixRow {
 message MatrixResponse {
   repeated MatrixRow result = 1;
   double computation_time = 2;
+}
+
+message AverageResponse {
+  double average_a = 1;
+  double average_b = 2;
+  double computation_time = 3;
+}
+
+message MinMaxResponse {
+  double min_a = 1;
+  double max_a = 2;
+  double min_b = 3;
+  double max_b = 4;
+  double computation_time = 5;
 }

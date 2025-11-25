@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  grpc-multiply:
+    build:
+      context: .
+      dockerfile: Dockerfile.grpc_multiply
+    ports:
+      - "50051:50051"
+    container_name: grpc-multiply-service
+    networks:
+      - matrix-network
+
+  grpc-average:
+    build:
+      context: .
+      dockerfile: Dockerfile.grpc_average
+    ports:
+      - "50052:50052"
+    container_name: grpc-average-service
+    networks:
+      - matrix-network
+
+  grpc-minmax:
+    build:
+      context: .
+      dockerfile: Dockerfile.grpc_minmax
+    ports:
+      - "50053:50053"
+    container_name: grpc-minmax-service
+    networks:
+      - matrix-network
+
+networks:
+  matrix-network:
+    driver: bridge

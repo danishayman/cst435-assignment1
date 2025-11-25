@@ -1,0 +1,161 @@
+Test Results - Tue Nov 25 17:58:44 +08 2025
+Matrix Size: 100x100
+Requests per test: 10
+========================================
+
+Architecture 1: gRPC Single Container
+Sending 10 requests to localhost:50051
+Matrix size: 100x100
+Running 3 services per request: Multiply, Average, MinMax
+======================================================================
+Request 1/10: Total=0.0211s [Multiply=0.0145s, Average=0.0036s, MinMax=0.0030s]
+Request 2/10: Total=0.0084s [Multiply=0.0036s, Average=0.0023s, MinMax=0.0024s]
+Request 3/10: Total=0.0081s [Multiply=0.0033s, Average=0.0024s, MinMax=0.0025s]
+Request 4/10: Total=0.0078s [Multiply=0.0032s, Average=0.0023s, MinMax=0.0023s]
+Request 5/10: Total=0.0068s [Multiply=0.0028s, Average=0.0021s, MinMax=0.0019s]
+Request 6/10: Total=0.0068s [Multiply=0.0027s, Average=0.0021s, MinMax=0.0019s]
+Request 7/10: Total=0.0063s [Multiply=0.0026s, Average=0.0019s, MinMax=0.0017s]
+Request 8/10: Total=0.0061s [Multiply=0.0024s, Average=0.0018s, MinMax=0.0019s]
+Request 9/10: Total=0.0063s [Multiply=0.0026s, Average=0.0019s, MinMax=0.0017s]
+Request 10/10: Total=0.0059s [Multiply=0.0024s, Average=0.0017s, MinMax=0.0018s]
+
+======================================================================
+RESULTS SUMMARY - ALL 3 SERVICES
+======================================================================
+Total requests: 10
+Matrix size: 100x100
+
+PER SERVICE AVERAGES:
+  Multiply  - Avg total: 0.0040s, Avg server: 0.0011s
+  Average   - Avg total: 0.0022s, Avg server: 0.0010s
+  MinMax    - Avg total: 0.0021s, Avg server: 0.0010s
+
+COMBINED TOTALS:
+  Average total time per request (all 3 services): 0.0084s
+  Average server computation per request: 0.0031s
+  Average network overhead per request: 0.0053s
+
+  GRAND TOTAL TIME (all 10 requests × 3 services): 0.0836s
+  Total server computation: 0.0310s
+  Total network overhead: 0.0526s
+======================================================================
+
+Architecture 2: HTTP Single Container
+Sending 10 requests to http://localhost:5001
+Matrix size: 100x100
+Running 3 services per request: Multiply, Average, MinMax
+======================================================================
+Request 1/10: Total=0.0593s [Multiply=0.0325s, Average=0.0141s, MinMax=0.0127s]
+Request 2/10: Total=0.0388s [Multiply=0.0157s, Average=0.0118s, MinMax=0.0113s]
+Request 3/10: Total=0.0371s [Multiply=0.0144s, Average=0.0112s, MinMax=0.0114s]
+Request 4/10: Total=0.0365s [Multiply=0.0141s, Average=0.0112s, MinMax=0.0113s]
+Request 5/10: Total=0.0364s [Multiply=0.0144s, Average=0.0112s, MinMax=0.0109s]
+Request 6/10: Total=0.0376s [Multiply=0.0145s, Average=0.0114s, MinMax=0.0117s]
+Request 7/10: Total=0.0365s [Multiply=0.0143s, Average=0.0116s, MinMax=0.0106s]
+Request 8/10: Total=0.0355s [Multiply=0.0139s, Average=0.0110s, MinMax=0.0107s]
+Request 9/10: Total=0.0366s [Multiply=0.0145s, Average=0.0111s, MinMax=0.0110s]
+Request 10/10: Total=0.0364s [Multiply=0.0137s, Average=0.0114s, MinMax=0.0113s]
+
+======================================================================
+RESULTS SUMMARY - ALL 3 SERVICES
+======================================================================
+Total requests: 10
+Matrix size: 100x100
+
+PER SERVICE AVERAGES:
+  Multiply  - Avg total: 0.0162s, Avg server: 0.0053s
+  Average   - Avg total: 0.0116s, Avg server: 0.0049s
+  MinMax    - Avg total: 0.0113s, Avg server: 0.0046s
+
+COMBINED TOTALS:
+  Average total time per request (all 3 services): 0.0391s
+  Average server computation per request: 0.0148s
+  Average network overhead per request: 0.0243s
+
+  GRAND TOTAL TIME (all 10 requests × 3 services): 0.3907s
+  Total server computation: 0.1475s
+  Total network overhead: 0.2431s
+======================================================================
+
+Architecture 3: gRPC Microservices (3 containers)
+Sending 10 requests to MICROSERVICES
+  Multiply service: localhost:50051
+  Average service: localhost:50052
+  MinMax service: localhost:50053
+Matrix size: 100x100
+======================================================================
+Request 1/10: Total=0.0237s [Multiply=0.0138s, Average=0.0051s, MinMax=0.0048s]
+Request 2/10: Total=0.0092s [Multiply=0.0039s, Average=0.0029s, MinMax=0.0024s]
+Request 3/10: Total=0.0075s [Multiply=0.0031s, Average=0.0020s, MinMax=0.0023s]
+Request 4/10: Total=0.0077s [Multiply=0.0030s, Average=0.0024s, MinMax=0.0022s]
+Request 5/10: Total=0.0069s [Multiply=0.0029s, Average=0.0020s, MinMax=0.0019s]
+Request 6/10: Total=0.0069s [Multiply=0.0029s, Average=0.0020s, MinMax=0.0020s]
+Request 7/10: Total=0.0067s [Multiply=0.0028s, Average=0.0020s, MinMax=0.0019s]
+Request 8/10: Total=0.0071s [Multiply=0.0027s, Average=0.0020s, MinMax=0.0024s]
+Request 9/10: Total=0.0065s [Multiply=0.0027s, Average=0.0019s, MinMax=0.0018s]
+Request 10/10: Total=0.0064s [Multiply=0.0026s, Average=0.0019s, MinMax=0.0019s]
+
+======================================================================
+MICROSERVICES RESULTS - 3 SEPARATE CONTAINERS
+======================================================================
+Total requests: 10
+Matrix size: 100x100
+
+PER SERVICE AVERAGES:
+  Multiply  - Avg total: 0.0041s, Avg server: 0.0011s
+  Average   - Avg total: 0.0024s, Avg server: 0.0010s
+  MinMax    - Avg total: 0.0024s, Avg server: 0.0010s
+
+COMBINED TOTALS:
+  Average total time per request (all 3 services): 0.0089s
+  Average server computation per request: 0.0031s
+  Average network overhead per request: 0.0057s
+
+  GRAND TOTAL TIME (all 10 requests × 3 services): 0.0885s
+  Total server computation: 0.0313s
+  Total network overhead: 0.0573s
+======================================================================
+
+Architecture 4: HTTP Microservices (3 containers)
+Sending 10 requests to MICROSERVICES
+  Multiply service: http://localhost:5001
+  Average service: http://localhost:5002
+  MinMax service: http://localhost:5003
+Matrix size: 100x100
+======================================================================
+Request 1/10: Total=0.0559s [Multiply=0.0285s, Average=0.0141s, MinMax=0.0133s]
+Request 2/10: Total=0.0401s [Multiply=0.0164s, Average=0.0120s, MinMax=0.0117s]
+Request 3/10: Total=0.0381s [Multiply=0.0145s, Average=0.0118s, MinMax=0.0118s]
+Request 4/10: Total=0.0372s [Multiply=0.0141s, Average=0.0118s, MinMax=0.0113s]
+Request 5/10: Total=0.0392s [Multiply=0.0152s, Average=0.0118s, MinMax=0.0122s]
+Request 6/10: Total=0.0390s [Multiply=0.0154s, Average=0.0121s, MinMax=0.0116s]
+Request 7/10: Total=0.0388s [Multiply=0.0162s, Average=0.0115s, MinMax=0.0111s]
+Request 8/10: Total=0.0368s [Multiply=0.0139s, Average=0.0114s, MinMax=0.0115s]
+Request 9/10: Total=0.0373s [Multiply=0.0149s, Average=0.0113s, MinMax=0.0111s]
+Request 10/10: Total=0.0372s [Multiply=0.0145s, Average=0.0115s, MinMax=0.0112s]
+
+======================================================================
+MICROSERVICES RESULTS - 3 SEPARATE CONTAINERS
+======================================================================
+Total requests: 10
+Matrix size: 100x100
+
+PER SERVICE AVERAGES:
+  Multiply  - Avg total: 0.0164s, Avg server: 0.0051s
+  Average   - Avg total: 0.0119s, Avg server: 0.0048s
+  MinMax    - Avg total: 0.0117s, Avg server: 0.0046s
+
+COMBINED TOTALS:
+  Average total time per request (all 3 services): 0.0400s
+  Average server computation per request: 0.0145s
+  Average network overhead per request: 0.0254s
+
+  GRAND TOTAL TIME (all 10 requests × 3 services): 0.3995s
+  Total server computation: 0.1452s
+  Total network overhead: 0.2543s
+======================================================================
+
+
+========================================
+All tests completed successfully!
+========================================

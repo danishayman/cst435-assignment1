@@ -1,0 +1,12 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY http_minmax_server.py .
+
+EXPOSE 5003
+
+CMD ["python", "http_minmax_server.py", "--port", "5003", "--host", "0.0.0.0"]
